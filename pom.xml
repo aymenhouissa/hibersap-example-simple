@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.hibersap.examples</groupId>
+    <artifactId>hibersap-example-simple</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <properties>
+        <sapjco3.version>3.0.10</sapjco3.version>
+        <sapjco3.native-lib.classifier>darwinintel64</sapjco3.native-lib.classifier>
+        <sapjco3.native-lib.packaging>jnilib</sapjco3.native-lib.packaging>
+        <sapjco3.native-lib.filename>libsapjco3.jnilib</sapjco3.native-lib.filename>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-native-libs</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.hibersap</groupId>
+                                    <artifactId>sapjco3</artifactId>
+                                    <version>${sapjco3.version}</version>
+                                    <classifier>${sapjco3.native-lib.classifier}</classifier>
+                                    <type>${sapjco3.native-lib.packaging}</type>
+                                    <overWrite>true</overWrite>
+                                    <destFileName>${sapjco3.native-lib.filename}</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}/sapjco3</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>-Djava.library.path=${project.build.directory}/sapjco3</argLine>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.hibersap</groupId>
+            <artifactId>hibersap-jco</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
