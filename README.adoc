@@ -1,0 +1,2 @@
+# hibersap-example-simple
+A simple standalone application showcasing Hibersap
